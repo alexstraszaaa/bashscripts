@@ -1,0 +1,33 @@
+#!/bin/bash
+INPUT="$1"
+
+if [[ ! -f "$INPUT" ]]; then
+  echo "File not found: $INPUT"
+  exit 1
+fi
+
+
+read -r header < "$INPUT"
+echo "$header"
+
+capitalize() {
+  echo "$1" | awk '{ for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) tolower(substr($i,2)); print }'
+}
+
+
+tail -n +2 "$INPUT" | while IFS=';' read -r name surname number fullname email; do
+
+  if [[ -z "$fullname" || "$fullname" == "" ]]; then
+    fullname="${name} ${surname}"
+  fi
+
+
+  if [[ -z "$email" || "$email" == "" ]]; then
+    first_initial=$(echo "$name" | cut -c1 | tr '[:upper:]' '[:lower:]')
+    lower_surname=$(echo "$surname" | tr '[:upper:]' '[:lower:]')
+    suffix="${number: -3}"
+    email="${first_initial}${lower_surname}${suffix}@company.com"
+  fi
+
+  echo "${name};${surname};${number};${fullname};${email}"
+done
