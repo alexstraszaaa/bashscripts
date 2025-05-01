@@ -1,0 +1,8 @@
+#!/bin/bash
+
+
+LENGTH=${1:-16}
+
+PASSWORD=$(< /dev/urandom tr -dc 'A-Za-z0-9!@#$%&*()-_=+' | head -c $LENGTH)
+
+echo "Generated Password: $PASSWORD"
