@@ -1,0 +1,17 @@
+#!/bin/bash
+
+awk -F ";" 'BEGIN { OFS=";" }
+function cap(s) { return toupper(substr(s,1,1)) tolower(substr(s,2)) }
+function l3(n)  { return sprintf("%03d", n % 1000) }
+NR == 1 {
+  print cap($1), cap($2), $3, "FullName", "Email"
+  next
+}
+NF >= 3 {
+  fname = cap($1)
+  lname = cap($2)
+  number = $3 + 0
+  fullname = fname " " lname
+  email = tolower(substr($1,1,1)) tolower(lname) l3(number) "@company.com"
+  print fname, lname, number, fullname, email
+}
